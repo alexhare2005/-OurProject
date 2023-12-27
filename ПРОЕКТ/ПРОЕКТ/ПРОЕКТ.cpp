@@ -28,21 +28,33 @@ int main() {
     case '1':
         cout << "\n\nКак вас зовут: ";
         getline(cin, playerName);
-        cout << "\nВведите начальный баланс для игры: $";
-        cin >> balance1;
+        do {
+            cout << "\nВведите начальный баланс для игры: $";
+            cin >> balance1;
+            if (balance1 < 0 || balance1 == 0)
+                cout << "Баланс не может быть меньше нуля или равным нулю" << endl;
+        } while (balance1 < 0 || balance1 == 0);
         singlePlayerMode(playerName, balance1);
         break;
     case '2':
         cout << "\nВведите имя первого игрока: ";
         getline(cin, player1);
-        cout << "\nВведите начальный баланс для " << player1 << ": $";
-        cin >> balance1;
+        do {
+            cout << "\nВведите начальный баланс для " << player1 << ": $";
+            cin >> balance1;
+            if (balance1 < 0 || balance1 == 0)
+                cout << "Баланс не может быть меньше нуля или равным нулю" << endl;
+        } while (balance1 < 0 || balance1 == 0);
         cin.ignore();
 
         cout << "\nВведите имя второго игрока: ";
         getline(cin, player2);
-        cout << "\nВведите начальный баланс для " << player2 << ": $";
-        cin >> balance2;
+        do {
+            cout << "\nВведите начальный баланс для " << player2 << ": $";
+            cin >> balance2;
+            if (balance2 < 0 || balance2 == 0)
+                cout << "Баланс не может быть меньше нуля или равным нулю" << endl;
+        } while (balance2 < 0 || balance2 == 0);
         twoPlayerMode(player1, balance1, player2, balance2);
         break;
     default:
@@ -74,9 +86,9 @@ void singlePlayerMode(string playerName, int& balance) {
         do {
             cout << "Привет, " << playerName << ", введите сумму для ставки: $";
             cin >> bettingAmount;
-            if (bettingAmount > balance)
-                cout << "Ставка не может быть больше текущего баланса!\n" << "\nВведите ставку заново\n ";
-        } while (bettingAmount > balance);
+            if (bettingAmount > balance || bettingAmount < 0 || bettingAmount == 0)
+                cout << "Ставка не может быть больше текущего баланса или равная 0!\n" << "\nВведите ставку заново\n ";
+        } while (bettingAmount > balance || bettingAmount < 0 || bettingAmount == 0);
 
         do {
             cout << "Угадайте число от 1 до 10 :";
@@ -108,7 +120,6 @@ void singlePlayerMode(string playerName, int& balance) {
         cout << "\n\n-->Хотите сыграть еще раз (y/n)? ";
         cin >> choice;
         cin.ignore(); // Чтобы скорректировать ввод
-
     } while (choice == 'Y' || choice == 'y');
 }
 
@@ -118,60 +129,60 @@ void twoPlayerMode(string player1, int& balance1, string player2, int& balance2)
     int diff1, diff2;
     char choice;
 
-    do {
-        system("cls");
-        rules();
-        cout << "\n\nБаланс " << player1 << ": $ " << balance1 << "\n";
-        cout << "Баланс " << player2 << ": $ " << balance2 << "\n";
-
-        cout << "\nВведите вашу ставку, " << player1 << ": $";
         do {
-            cin >> bet1;
-            if (bet1 > balance1) {
-                cout << "Ставка не может быть больше вашего баланса! Введите ставку заново: $";
+            system("cls");
+            rules();
+            cout << "\n\nБаланс " << player1 << ": $ " << balance1 << "\n";
+            cout << "Баланс " << player2 << ": $ " << balance2 << "\n";
+
+            cout << "\nВведите вашу ставку, " << player1 << ": $";
+            do {
+                cin >> bet1;
+                if (bet1 > balance1 || bet1 < 0|| bet1==0) {
+                    cout << "Ставка не может быть больше вашего баланса или равна 0! Введите ставку заново: $";
+                }
+            } while (bet1 > balance1 || bet1 < 0 || bet1 == 0);
+
+            cout << "\nВведите вашу ставку, " << player2 << ": $";
+            do {
+                cin >> bet2;
+                if (bet2 > balance2 || bet2 < 0 || bet2 == 0) {
+                    cout << "Ставка не может быть больше вашего баланса или равна 0! Введите ставку заново: $";
+                }
+            } while (bet2 > balance2 || bet2 < 0 || bet2 == 0);
+
+            cout << "\n" << player1 << ", введите ваше число от 1 до 10: ";
+            cin >> guess1;
+
+            cout << "\n" << player2 << ", введите ваше число от 1 до 10: ";
+            cin >> guess2;
+
+            dice = rand() % 10 + 1;
+            cout << "\nВыигрышное число: " << dice << "\n";
+
+            diff1 = abs(dice - guess1);
+            diff2 = abs(dice - guess2);
+
+            if (diff1 < diff2) {
+                cout << player1 << " выиграл! Его число было ближе к загаданному.\n";
+                balance1 += bet1;
+                balance2 -= bet2;
             }
-        } while (bet1 > balance1);
-
-        cout << "\nВведите вашу ставку, " << player2 << ": $";
-        do {
-            cin >> bet2;
-            if (bet2 > balance2) {
-                cout << "Ставка не может быть больше вашего баланса! Введите ставку заново: $";
+            else if (diff2 < diff1) {
+                cout << player2 << " выиграл! Его число было ближе к загаданному.\n";
+                balance2 += bet2;
+                balance1 -= bet1;
             }
-        } while (bet2 > balance2);
+            else {
+                cout << "Ничья! Оба числа равноудалены от загаданного числа.\n";
+            }
 
-        cout << "\n" << player1 << ", введите ваше число от 1 до 10: ";
-        cin >> guess1;
+            cout << "\nБаланс " << player1 << ": $ " << balance1 << "\n";
+            cout << "Баланс " << player2 << ": $ " << balance2 << "\n";
 
-        cout << "\n" << player2 << ", введите ваше число от 1 до 10: ";
-        cin >> guess2;
+            cout << "\n\n-->Хотите сыграть еще раз (y/n)? ";
+            cin >> choice;
+            cin.ignore(); // Чтобы скорректировать ввод
 
-        dice = rand() % 10 + 1;
-        cout << "\nВыигрышное число: " << dice << "\n";
-
-        diff1 = abs(dice - guess1);
-        diff2 = abs(dice - guess2);
-
-        if (diff1 < diff2) {
-            cout << player1 << " выиграл! Его число было ближе к загаданному.\n";
-            balance1 += bet1;
-            balance2 -= bet2;
-        }
-        else if (diff2 < diff1) {
-            cout << player2 << " выиграл! Его число было ближе к загаданному.\n";
-            balance2 += bet2;
-            balance1 -= bet1;
-        }
-        else {
-            cout << "Ничья! Оба числа равноудалены от загаданного числа.\n";
-        }
-
-        cout << "\nБаланс " << player1 << ": $ " << balance1 << "\n";
-        cout << "Баланс " << player2 << ": $ " << balance2 << "\n";
-
-        cout << "\n\n-->Хотите сыграть еще раз (y/n)? ";
-        cin >> choice;
-        cin.ignore(); // Чтобы скорректировать ввод
-
-    } while (choice == 'Y' || choice == 'y');
+        } while (choice == 'Y' || choice == 'y');
 }
