@@ -152,10 +152,21 @@ void twoPlayerMode(string player1, int& balance1, string player2, int& balance2)
             } while (bet2 > balance2 || bet2 < 0 || bet2 == 0);
 
             cout << "\n" << player1 << ", введите ваше число от 1 до 10: ";
-            cin >> guess1;
-
+            do {
+                cout << "Угадайте число от 1 до 10 :";
+                cin >> guess1;
+                if (guess1 <= 0 || guess1 > 10)
+                    cout << "\nЧисло должно быть от 1 до 10\n"
+                    << "Введите число заново:\n ";
+            } while (guess1 <= 0 || guess1 > 10);
             cout << "\n" << player2 << ", введите ваше число от 1 до 10: ";
-            cin >> guess2;
+            do {
+                cout << "Угадайте число от 1 до 10 :";
+                cin >> guess2;
+                if (guess2 <= 0 || guess2 > 10)
+                    cout << "\nЧисло должно быть от 1 до 10\n"
+                    << "Введите число заново:\n ";
+            } while (guess2 <= 0 || guess2 > 10);
 
             dice = rand() % 10 + 1;
             cout << "\nВыигрышное число: " << dice << "\n";
